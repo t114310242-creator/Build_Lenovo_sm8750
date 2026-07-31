@@ -560,7 +560,15 @@ jobs:
             enable_config CONFIG_IPC_NS
             enable_config CONFIG_PID_NS
             enable_config CONFIG_DEVTMPFS
-
+            # ---- 必要配置 (joystick) ----
+            enable_config CONFIG_INPUT_FF_MEMLESS
+            enable_config CONFIG_INPUT_JOYSTICK
+            enable_config CONFIG_JOYSTICK_XPAD
+            enable_config CONFIG_JOYSTICK_XPAD_FF
+            enable_config CONFIG_HID_MICROSOFT
+            enable_config CONFIG_MICROSOFT_FF
+            enable_config CONFIG_INPUT_UINPUT
+            enable_config CONFIG_UHID
             # ---- 网络相关配置 (Docker/NAT 模式, 按 Kconfig 实际存在启用) ----
             enable_config_if_defined CONFIG_NETFILTER_XT_MATCH_ADDRTYPE
             enable_config_if_defined CONFIG_NETFILTER_XT_TARGET_LOG
