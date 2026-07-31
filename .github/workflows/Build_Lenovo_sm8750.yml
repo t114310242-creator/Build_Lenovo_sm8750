@@ -156,6 +156,10 @@ jobs:
 
       - name: 🛠 Install dependencies and Initialize repo and sync （安装环境依赖+初始化源码仓库及工具链）
         run: |
+          rm -rf kernel_workspace
+          mkdir kernel_workspace
+          cd kernel_workspace
+          
           sudo apt-mark hold firefox &&
           sudo apt-mark hold libc-bin &&
           sudo apt purge man-db &&
@@ -599,30 +603,11 @@ jobs:
           else
             echo "未启用SUSFS 跳过SUSFS配置"
           fi
-
-          # ==================== 搖桿震動與力回饋 (Gamepad Rumble & FF) 配置 ====================
-          echo "CONFIG_INPUT_FF_MEMLESS=y" >> "$DEFCONFIG"
-          echo "CONFIG_INPUT_JOYSTICK=y" >> "$DEFCONFIG"
-          echo "CONFIG_JOYSTICK_XPAD=y" >> "$DEFCONFIG"
-          echo "CONFIG_JOYSTICK_XPAD_FF=y" >> "$DEFCONFIG"
-          echo "CONFIG_JOYSTICK_XPAD_LEDS=y" >> "$DEFCONFIG"
-          echo "CONFIG_HID_SONY=y" >> "$DEFCONFIG"
-          echo "CONFIG_SONY_FF=y" >> "$DEFCONFIG"
-          echo "CONFIG_HID_PLAYSTATION=y" >> "$DEFCONFIG"
-          echo "CONFIG_PLAYSTATION_FF=y" >> "$DEFCONFIG"
-          echo "CONFIG_HID_NINTENDO=y" >> "$DEFCONFIG"
-          echo "CONFIG_NINTENDO_FF=y" >> "$DEFCONFIG"
-          echo "CONFIG_HID_MICROSOFT=y" >> "$DEFCONFIG"
-          echo "CONFIG_MICROSOFT_FF=y" >> "$DEFCONFIG"
-          echo "CONFIG_LOGITECH_FF=y" >> "$DEFCONFIG"
-          echo "CONFIG_INPUT_EVDEV=y" >> "$DEFCONFIG"
-          echo "CONFIG_INPUT_UINPUT=y" >> "$DEFCONFIG"
-          echo "CONFIG_UHID=y" >> "$DEFCONFIG"
           
-          echo "CONFIG_TMPFS_XATTR=y" >> "$DEFCONFIG"
-          echo "CONFIG_TMPFS_POSIX_ACL=y" >> "$DEFCONFIG"
+          echo "CONFIG_TMPFS_XATTR=y" >> ./common/arch/arm64/configs/gki_defconfig
+          echo "CONFIG_TMPFS_POSIX_ACL=y" >> ./common/arch/arm64/configs/gki_defconfig
 
-          echo "CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y" >> "$DEFCONFIG"
+          echo "CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y" >> ./common/arch/arm64/configs/gki_defconfig
           
           #Remove check_defconfig
           sudo sed -i 's/check_defconfig//' ./common/build.config.gki
@@ -809,7 +794,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
          name: kernel_image_${{ env.KERNEL_VERSION }}
-         path: kernel_workspace/common/out/boot/kernel
+         path: kernel_workspace/common/out/arch/arm64/boot/kernel
          
       - name: 📦 Sign boot using AOSP test key (使用AOSP测试密钥签名boot)
         if: ${{ env.ENABLE_SIGNED == 'true' }}
