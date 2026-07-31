@@ -432,7 +432,7 @@ jobs:
           cp ./oppo_oplus_realme_sm8750/zram_patch/lz4armv8.S ./common/lib
           cp ./oppo_oplus_realme_sm8750/zram_patch/002-zstd.patch ./common/
           cd ./common
-          git apply -p1 < 001-lz4.patch || true
+          patch -p1 < 001-lz4.patch || true
           patch -p1 < 002-zstd.patch || true
           
       - name: 🛠 Set Baseband-guard (配置BBG基带守护)
@@ -503,7 +503,7 @@ jobs:
             fi
             echo "  应用: $PATCH_NAME"
             dos2unix "$PATCH_PATH"
-            if ! git apply --ignore-whitespace "$PATCH_PATH"; then
+            if ! patch -p1 --ignore-whitespace < "$PATCH_PATH"; then
               echo "::warning::补丁 $PATCH_NAME 应用失败，可能已应用或上下文不匹配"
             fi
           done
